@@ -23,21 +23,30 @@ app.get('/posts', async (req , res) => {
 //create new account
 app.post('/user/create/', async (req, res) => {
     const check_user = prisma.user.findFirst({
-        where: {username: req.body.username}
-    })
-    if(!check_user){
-        const hashedPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-        const newUser = await prisma.user.create({
-            data: {
-                username: req.body.username,
-                email: req.body.email,
-                password: hashedPassword
-            }
-        })
-        res.status(201).json(newUser)
-    } else {
-        res.status(400).json(false)
-    }
+        where: {
+            username: req.body.username
+        },
+        select: {
+            username: true,
+            email: true
+        }
+    });
+    const user = JSON.parse(JSON.stringify(check_user));
+    if(user.username !== null){
+        res.status(400).json({ error: "Username already in use!"})
+    };
+    if(user.email !== null){
+        res.status(400).json({ error: "Email already in use!"})
+    };
+    const hashedPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+    const newUser = await prisma.user.create({
+        data: {
+            username: req.body.username,
+            email: req.body.email,
+            password: hashedPassword
+        }
+    });
+    res.status(201).json(newUser);
 });
 
 //login to account
@@ -49,11 +58,11 @@ app.get('/user/login', async(req, res) => {
     });
     if(!find_user) {
         return res.status(400).json({error : 'Username does not exist.'})
-    }
+    };
     const passwordCheck = await bcrypt.compare(req.body.password, JSON.stringify(prisma.user.findUnique({ where: {username: req.body.username }, select: {password:true}})));
     if (!passwordCheck) {
         return res.status(400).json({ error: 'Invalid Password.'})
-    }
+    };
     res.json(find_user);
 });
 

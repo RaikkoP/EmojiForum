@@ -1,15 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  constructor () {}
+
+  constructor (
+  ) {};
+
+  registerForm = new FormGroup({
+    username: new FormControl(),
+    email: new FormControl(),
+    password: new FormControl(),
+    confirmPassword: new FormControl(),
+  });
+
+  onSubmit(): void {
+    console.log(this.registerForm.value);
+    this.registerForm.reset();
+  }
+
   demo_data = [
     {
       id: 0,
