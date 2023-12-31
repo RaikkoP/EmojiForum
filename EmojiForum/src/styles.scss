@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+}
+html {
+    font-family: 'Inconsolata', sans-serif;
+    height: 100vh;
+    background: rgb(255, 255, 255); 
+}
