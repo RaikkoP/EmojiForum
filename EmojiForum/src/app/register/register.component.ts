@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
 
   constructor (
+    private http: HttpClient
   ) {};
 
   registerForm = new FormGroup({
@@ -23,8 +25,16 @@ export class RegisterComponent {
 
   onSubmit(): void {
     console.log(this.registerForm.value);
+    const username = this.registerForm.get('username')?.value;
+    const password = this.registerForm.get('password')?.value;
+    const email = this.registerForm.get('email')?.value;
+    this.http.post<any>('http://localhost:3000/user/create/', {username, password, email}).subscribe(data => {
+      console.log(data)
+    }, error => {
+      console.log(error)
+    })
     this.registerForm.reset();
-  }
+  };
 
   demo_data = [
     {
@@ -68,6 +78,7 @@ export class RegisterComponent {
       username: 'Siim',
       message: 'I feel alive!',
       emoji: '✝️'
-    },
-  ]
+    }
+  ];
 }
+  

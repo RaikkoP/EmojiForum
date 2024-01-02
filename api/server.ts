@@ -6,38 +6,42 @@ import bcrypt from 'bcryptjs';
 const app = express();
 const prisma = new PrismaClient();
 
+// SETUP
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//get all users because we can
+// get all users because we can
 app.get('/users', async (req, res) => {
  const users = await prisma.user.findMany();
  res.json(users);
 });
 
-//get all the posts? FR?!
+// get all the posts? FR?!
 app.get('/posts', async (req , res) => {
     const posts = await prisma.post.findMany();
     res.json(posts)
 });
 
-//create new account
+// create new account
 app.post('/user/create/', async (req, res) => {
-    const check_user = prisma.user.findFirst({
+    if(!req.body.password === req.body.confirmPassword){
+        res.status(400).json({ error: "Passwords do not match!"});
+    }
+    const check_user = await prisma.user.findFirst({
         where: {
-            username: req.body.username
-        },
-        select: {
-            username: true,
-            email: true
+            OR: [
+                {username: req.body.username},
+                {email: req.body.email}
+            ]
         }
     });
-    const user = JSON.parse(JSON.stringify(check_user));
-    if(user.username !== null){
-        res.status(400).json({ error: "Username already in use!"})
+    if(check_user?.username === req.body.username){
+        res.status(400).json({ error: "Username already in use!"});
     };
-    if(user.email !== null){
-        res.status(400).json({ error: "Email already in use!"})
-    };
+    if(check_user?.email === req.body.email){
+        res.status(400).json({ error: "Email already in use" });
+    }
     const hashedPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     const newUser = await prisma.user.create({
         data: {
@@ -49,21 +53,21 @@ app.post('/user/create/', async (req, res) => {
     res.status(201).json(newUser);
 });
 
-//login to account
-app.get('/user/login', async(req, res) => {
-    const find_user = prisma.user.findUnique({
+// login to account
+app.get('/user/login/:username/:password', async(req, res) => {
+    const find_user = await prisma.user.findUnique({
         where: {
-            username: req.body.username
+            username: req.params.username
         },
     });
     if(!find_user) {
         return res.status(400).json({error : 'Username does not exist.'})
     };
-    const passwordCheck = await bcrypt.compare(req.body.password, JSON.stringify(prisma.user.findUnique({ where: {username: req.body.username }, select: {password:true}})));
+    const passwordCheck = await bcrypt.compare(req.params.password, find_user?.password);
     if (!passwordCheck) {
         return res.status(400).json({ error: 'Invalid Password.'})
     };
-    res.json(find_user);
+    res.status(201).json(find_user);
 });
 
 app.listen(3000, () => {

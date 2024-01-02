@@ -16,6 +16,7 @@ model User {
   username  String @unique
   password  String
   email     String @unique
+  profilePic String @default("placeholder.png")
   posts     Post[]
 }
 
@@ -25,5 +26,7 @@ model Post {
   message   String
   emoji     String
   userId    Int?
-  user      User?    @relation(fields: [userId], references: [id])  
+  user      User?    @relation(fields: [userId], references: [id])
+  likes Int @default(0)
+  dislikes Int @default(0)
 }
