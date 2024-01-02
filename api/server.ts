@@ -3,13 +3,30 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
+import session from 'express-session';
 const app = express();
+const store = new session.MemoryStore();
 const prisma = new PrismaClient();
+
+declare module 'express-session' {
+    export interface SessionData {
+        user: {[key:string]: any};
+        authenticated: boolean
+    }
+}
 
 // SETUP
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: bcrypt.genSaltSync(12),
+    cookie: {
+        maxAge: 30000,
+    },
+    saveUninitialized: false,
+    store: store
+}))
 
 // get all users because we can
 app.get('/users', async (req, res) => {
@@ -25,8 +42,11 @@ app.get('/posts', async (req , res) => {
 
 // create new account
 app.post('/user/create/', async (req, res) => {
-    if(!req.body.password === req.body.confirmPassword){
-        res.status(400).json({ error: "Passwords do not match!"});
+    if(!req.body.username || !req.body.password || !req.body.confirmPassword || !req.body.email) {
+        return res.status(400).json({ error: "Please fill entire form!"})
+    }
+    if(!(req.body.password === req.body.confirmPassword)){
+        return res.status(400).json({ error: "Passwords do not match!"});
     }
     const check_user = await prisma.user.findFirst({
         where: {
@@ -37,10 +57,10 @@ app.post('/user/create/', async (req, res) => {
         }
     });
     if(check_user?.username === req.body.username){
-        res.status(400).json({ error: "Username already in use!"});
+        return res.status(400).json({ error: "Username already in use!"});
     };
     if(check_user?.email === req.body.email){
-        res.status(400).json({ error: "Email already in use" });
+        return res.status(400).json({ error: "Email already in use" });
     }
     const hashedPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     const newUser = await prisma.user.create({
@@ -50,24 +70,36 @@ app.post('/user/create/', async (req, res) => {
             password: hashedPassword
         }
     });
-    res.status(201).json(newUser);
+    return res.status(201).json(newUser);
 });
 
 // login to account
-app.get('/user/login/:username/:password', async(req, res) => {
+app.post('/user/login/', async(req, res) => {
+    console.log(req.sessionID);
+    console.log(store)
+    if(!req.body.username || !req.body.password){
+        return res.status(400).json({ error: 'Missing username or password'})
+    }
     const find_user = await prisma.user.findUnique({
         where: {
-            username: req.params.username
+            username: req.body.username
         },
     });
     if(!find_user) {
         return res.status(400).json({error : 'Username does not exist.'})
     };
-    const passwordCheck = await bcrypt.compare(req.params.password, find_user?.password);
+    const passwordCheck = await bcrypt.compare(req.body.password, find_user?.password);
     if (!passwordCheck) {
         return res.status(400).json({ error: 'Invalid Password.'})
     };
-    res.status(201).json(find_user);
+    req.session.authenticated = true;
+    console.log(req.session.authenticated);
+    req.session.user = {
+        id: find_user.id,
+        username: find_user.username,
+        profilePicture: find_user.profilePic
+    };
+    return res.json(req.session)
 });
 
 app.listen(3000, () => {

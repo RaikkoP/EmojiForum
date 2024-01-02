@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -13,7 +15,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class RegisterComponent {
 
   constructor (
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {};
 
   registerForm = new FormGroup({
@@ -27,13 +30,18 @@ export class RegisterComponent {
     console.log(this.registerForm.value);
     const username = this.registerForm.get('username')?.value;
     const password = this.registerForm.get('password')?.value;
+    const confirmPassword = this.registerForm.get('confirmPassword')?.value;
     const email = this.registerForm.get('email')?.value;
-    this.http.post<any>('http://localhost:3000/user/create/', {username, password, email}).subscribe(data => {
-      console.log(data)
-    }, error => {
-      console.log(error)
-    })
-    this.registerForm.reset();
+    this.http.post<any>('http://localhost:3000/user/create/', {username, password, confirmPassword , email}).subscribe({
+      next: data => {
+        console.log(data);
+        this.router.navigate(['/login']);
+      },
+      error: err => {
+        console.log(err);
+        this.registerForm.reset();
+      }
+    });
   };
 
   demo_data = [

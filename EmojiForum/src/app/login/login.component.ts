@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,8 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class LoginComponent {
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { };
 
   loginForm = new FormGroup({
@@ -23,11 +26,15 @@ export class LoginComponent {
     console.log(this.loginForm.value);
     const username = this.loginForm.get("username")?.value;
     const password = this.loginForm.get("password")?.value;
-    this.http.get(`http://localhost:3000/user/login/${encodeURIComponent(username)}/${encodeURIComponent(password)}`).subscribe(data => {
-      console.log(data);
-    }, error => {
-      console.log(error);
+    this.http.post<any>('http://localhost:3000/user/login/', { username, password }).subscribe({
+      next: data => {
+        console.log(data);
+        this.router.navigate(['/dashboard'])
+      },
+      error: err => {
+        console.log(err)
+        this.loginForm.reset();
+      }
     });
-    this.loginForm.reset();
   }
 }
