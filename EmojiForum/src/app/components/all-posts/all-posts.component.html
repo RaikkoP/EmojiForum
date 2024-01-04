@@ -1,3 +1,12 @@
-<div>
-    <h1>Posts</h1>
-</div>
+<div class="posts">
+    <div *ngFor="let data of posts; trackBy: trackByIndex" class="post-container">
+        <div class="image-container">
+            <img class="demo-image" [src]="'../../assets/' + data.user.profilePic" height="120" width="120"/>
+            <h4 class="username">{{data.username}}</h4>
+        </div>
+        <div class="post-info">
+            <h3 class="message">{{data.message}}</h3>
+            <h3 class="emoji">{{data.emoji}}</h3>
+        </div>
+    </div>
+ </div>

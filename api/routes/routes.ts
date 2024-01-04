@@ -26,7 +26,8 @@ router.get('/user/get/', AuthController.getUser);
 // CREATE NEW POST
 router.post('/post/create', validatePayload, PostController.createPost);
 
-
+// GET ALL POSTS
+router.get('/post/get', PostController.getRecentPost);
 
 
 

@@ -1,31 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import UserResponse from '../../../model/user';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { AllPostsComponent } from '../all-posts/all-posts.component';
 
 @Component({
   selector: 'app-user-info',
   standalone: true,
   imports: [ReactiveFormsModule],
+  providers: [AllPostsComponent],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.scss'
 })
 export class UserInfoComponent implements OnInit {
 
-  id: Number = 0;
-  username: String = '';
-  profilePic: String = '';
-  likes: Number = 0;
-  dislikes: Number = 0;
-  posts: Number = 0;
   emojis: any[] = [];
   selectedEmoji: String = '😀'
+  @Input() username: String = '';
+  @Input() profilePic: String = '';
+  @Input() id: Number = 0;
+  
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) { };
 
   postForm = new FormGroup({
@@ -43,24 +41,11 @@ export class UserInfoComponent implements OnInit {
     this.selectedEmoji = selected;
   };
 
-  getAuthentication() {
-    return this.http.get<UserResponse>('http://localhost:3000/user/get/', { withCredentials: true }).subscribe({
-      next: res => {
-        this.username = res.username;
-        this.profilePic = res.profilePic;
-        this.id = res.id;
-      },
-      error: err => {
-        this.router.navigate(['/login']);
-      }
-    })
-  };
-
   onSubmit(): void {
     const message = this.postForm.get('message')?.value;
     const emoji = this.selectedEmoji;
     const userId = this.id;
-    this.http.post<any>('http://localhost:3000/post/create', {message, emoji, userId}).subscribe({
+    this.http.post<any>('http://localhost:3000/post/create', { message, emoji, userId }).subscribe({
       next: res => {
         console.log(res);
         this.postForm.get('message')?.setValue('');
@@ -72,7 +57,6 @@ export class UserInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAuthentication();
     this.getEmojis();
   }
 }

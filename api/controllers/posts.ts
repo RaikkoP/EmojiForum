@@ -15,9 +15,17 @@ class PostController {
                 message: req.body.message,
                 emoji: req.body.emoji,
                 userId: req.body.userId,
-            }
+            },
         });
         return res.status(201).json(newPost);
+    }
+    static async getRecentPost(req: Request, res: Response) {
+        const getPosts = await prisma.post.findMany({
+            include: {
+                user: true
+            }
+        });
+        return res.json(getPosts);
     }
 }
 

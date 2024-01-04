@@ -1,4 +1,6 @@
 <div class="container">
-    <app-user-info></app-user-info>
-    <app-all-posts></app-all-posts>
+    <app-user-info [id]="id" [username]="username" [profilePic]="profilePic"></app-user-info>
+    <div class="overflow-control">
+        <app-all-posts [posts]="posts"></app-all-posts>
+    </div>
 </div>
