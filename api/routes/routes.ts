@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { Request, Response, NextFunction } from 'express';
 import AuthController from '../controllers/auth';
-import jwt from 'jsonwebtoken';
+import PostController from '../controllers/posts';
 const router = Router();
 
 // MIDDLEWARE FOR PAYLOAD VERIFICATION
@@ -22,6 +22,11 @@ router.post('/user/login/', validatePayload, AuthController.loginUser);
 
 // GET AUTHENTICATED USER
 router.get('/user/get/', AuthController.getUser);
+
+// CREATE NEW POST
+router.post('/post/create', validatePayload, PostController.createPost);
+
+
 
 
 

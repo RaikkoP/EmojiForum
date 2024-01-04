@@ -34,6 +34,7 @@ export class RegisterComponent {
     const email = this.registerForm.get('email')?.value;
     this.http.post<any>('http://localhost:3000/user/create/', {username, password, confirmPassword , email}).subscribe({
       next: data => {
+        console.log(data);
         this.router.navigate(['/login']);
       },
       error: err => {

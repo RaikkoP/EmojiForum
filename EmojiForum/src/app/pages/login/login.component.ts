@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router
@@ -33,5 +33,15 @@ export class LoginComponent {
         this.loginForm.reset();
       }
     });
+  };
+  getAuthentication() {
+    return this.http.get('http://localhost:3000/user/get/', { withCredentials: true }).subscribe({
+      next: res => {
+        this.router.navigate(['/dashboard']);
+      }
+    })
+  };
+  ngOnInit(): void {
+      this.getAuthentication();
   }
 }
