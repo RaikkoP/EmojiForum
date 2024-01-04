@@ -56,6 +56,18 @@ export class UserInfoComponent implements OnInit {
     })
   }
 
+  logout() {
+    this.http.get<any>('http://localhost:3000/user/logout', {withCredentials: true}).subscribe({
+      next: res => {
+        console.log(res);
+        location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
   ngOnInit() {
     this.getEmojis();
   }

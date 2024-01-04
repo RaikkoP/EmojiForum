@@ -23,6 +23,9 @@ router.post('/user/login/', validatePayload, AuthController.loginUser);
 // GET AUTHENTICATED USER
 router.get('/user/get/', AuthController.getUser);
 
+// USER LOGOUT
+router.get ('/user/logout', AuthController.logOut);
+
 // CREATE NEW POST
 router.post('/post/create', validatePayload, PostController.createPost);
 
