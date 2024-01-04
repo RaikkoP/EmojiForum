@@ -23,16 +23,13 @@ export class LoginComponent {
   });
 
   onSubmit(): void {
-    console.log(this.loginForm.value);
     const username = this.loginForm.get("username")?.value;
     const password = this.loginForm.get("password")?.value;
-    this.http.post<any>('http://localhost:3000/user/login/', { username, password }).subscribe({
+    this.http.post<any>('http://localhost:3000/user/login/', { username, password }, {withCredentials: true}).subscribe({
       next: data => {
-        console.log(data);
         this.router.navigate(['/dashboard'])
       },
       error: err => {
-        console.log(err)
         this.loginForm.reset();
       }
     });

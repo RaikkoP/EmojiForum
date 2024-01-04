@@ -34,11 +34,9 @@ export class RegisterComponent {
     const email = this.registerForm.get('email')?.value;
     this.http.post<any>('http://localhost:3000/user/create/', {username, password, confirmPassword , email}).subscribe({
       next: data => {
-        console.log(data);
         this.router.navigate(['/login']);
       },
       error: err => {
-        console.log(err);
         this.registerForm.reset();
       }
     });
@@ -82,10 +80,10 @@ export class RegisterComponent {
     },
     {
       id: 5,
-      image: '../../assets/siim.jpg',
-      username: 'Siim',
-      message: 'I feel alive!',
-      emoji: '✝️'
+      image: '../../assets/mica.jpg',
+      username: 'Micikator',
+      message:  'Serbian Bread :3',
+      emoji: '🇷🇸'
     }
   ];
 }
