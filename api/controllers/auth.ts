@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 
 // CREATE JWT SECRET TOKEN
 const secretJWT = bcrypt.genSaltSync(11);
+// REGEX
+const regexUsername = new RegExp("/^[a-zA-Z0-9_]{6,18}$/");
+const regexPassword = new RegExp("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[_,\?\%&\*\@\!]).{12,24}$/");
 
 class AuthController {
     static async createUser(req: Request, res: Response) {
@@ -16,6 +19,14 @@ class AuthController {
         // CHECK IF PASSWORDS MATCH
         if (!(req.body.password === req.body.confirmPassword)) {
             return res.status(400).json({ error: "Passwords do not match!" });
+        }
+        // CHECK IF PASSWORDS MATCH REGEX
+        if (regexPassword.test(req.body.password)) {
+            return res.status(400).json({ error: "Password does not match regex, make sure password has 1 lowercase, 1 uppercase, 1 number, 1 symbol and is atleast 12 symbols" })
+        }
+        // CHECK IF USERNAME MATCH REGEX
+        if (regexUsername.test(req.body.username)) {
+            return res.status(400).json({ error: "Username does match regex" })
         }
         // FIND IF THERE IS A USER ALREADY MADE WITH THE USERNAME OR EMAIL
         const check_user = await prisma.user.findFirst({
@@ -51,6 +62,14 @@ class AuthController {
         if (!req.body.username || !req.body.password) {
             return res.status(400).json({ error: 'Missing username or password' })
         }
+        // CHECK IF PASSWORDS MATCH REGEX
+        if (regexPassword.test(req.body.password)) {
+            return res.status(400).json({ error: "Password does not match regex, make sure password has 1 lowercase, 1 uppercase, 1 number, 1 symbol and is atleast 12 symbols" })
+        }
+        // CHECK IF USERNAME MATCH REGEX
+        if (regexUsername.test(req.body.username)) {
+            return res.status(400).json({ error: "Username does match regex" })
+        }
         // FIND THE USER BY USERNAME
         const find_user = await prisma.user.findUnique({
             where: {
@@ -78,6 +97,7 @@ class AuthController {
     }
 
     static async getUser(req: Request, res: Response) {
+        // ATTEMPT TO ACCESS GIVEN COOKIE FOR USERINFO
         try {
             const cookie = req.cookies['token'];
             const claim = jwt.verify(cookie, secretJWT) as JwtPayload;
@@ -86,6 +106,7 @@ class AuthController {
                     message: 'Unauthenticated'
                 });
             }
+            // GATHER USERINFO IF COOKIE IS FOUND
             const user = await prisma.user.findFirst({
                 where: {
                     id: claim.id
@@ -105,6 +126,7 @@ class AuthController {
         }
     }
 
+    // LOGOUT FUNCTION
     static async logOut(req: Request, res: Response) {
         res.cookie('token', '', { maxAge: 0 });
         res.send({

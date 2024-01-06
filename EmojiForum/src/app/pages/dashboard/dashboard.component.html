@@ -1,5 +1,7 @@
 <div class="container">
-    <app-user-info (postCreated)="getPosts()" [id]="id" [username]="username" [profilePic]="profilePic"></app-user-info>
+    <div class="user-info">
+        <app-user-info (postCreated)="getPosts()" [id]="id" [username]="username" [profilePic]="profilePic"></app-user-info>
+    </div>
     <div class="overflow-control">
         <app-all-posts  [posts]="posts"></app-all-posts>
     </div>

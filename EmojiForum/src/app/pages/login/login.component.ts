@@ -3,7 +3,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,7 +10,11 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
+
 export class LoginComponent implements OnInit {
+
+  error: String = '';
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -25,11 +28,12 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     const username = this.loginForm.get("username")?.value;
     const password = this.loginForm.get("password")?.value;
-    this.http.post<any>('http://localhost:3000/user/login/', { username, password }, {withCredentials: true}).subscribe({
+    this.http.post<any>('http://localhost:3000/user/login/', { username, password }, { withCredentials: true }).subscribe({
       next: data => {
         this.router.navigate(['/dashboard'])
       },
       error: err => {
+        this.error = err.error.error;
         this.loginForm.reset();
       }
     });
@@ -38,10 +42,13 @@ export class LoginComponent implements OnInit {
     return this.http.get('http://localhost:3000/user/get/', { withCredentials: true }).subscribe({
       next: res => {
         this.router.navigate(['/dashboard']);
+      },
+      error: err => {
+        this.error = err.error.error;
       }
     })
   };
   ngOnInit(): void {
-      this.getAuthentication();
+    this.getAuthentication();
   }
 }

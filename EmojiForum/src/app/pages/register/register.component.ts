@@ -14,10 +14,12 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
 
-  constructor (
+  constructor(
     private http: HttpClient,
     private router: Router
-  ) {};
+  ) { };
+
+  error: String = '';
 
   registerForm = new FormGroup({
     username: new FormControl(),
@@ -32,12 +34,13 @@ export class RegisterComponent {
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
     const email = this.registerForm.get('email')?.value;
-    this.http.post<any>('http://localhost:3000/user/create/', {username, password, confirmPassword , email}).subscribe({
+    this.http.post<any>('http://localhost:3000/user/create/', { username, password, confirmPassword, email }).subscribe({
       next: data => {
         console.log(data);
         this.router.navigate(['/login']);
       },
       error: err => {
+        this.error = err.error.error;
         this.registerForm.reset();
       }
     });
@@ -83,9 +86,8 @@ export class RegisterComponent {
       id: 5,
       image: '../../assets/mica.jpg',
       username: 'Micikator',
-      message:  'Serbian Bread :3',
+      message: 'Serbian Bread :3',
       emoji: '🇷🇸'
     }
   ];
 }
-  

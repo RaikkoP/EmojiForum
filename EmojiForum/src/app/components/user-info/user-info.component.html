@@ -16,7 +16,7 @@
     <div class="form-container">
         <form [formGroup]="postForm" class="form">
             <div class="form-object">
-                <label for="postBody">Post body</label>
+                <label pattern="/^[a-zA-Z0-9_]{6,12}$/" for="postBody">Post body</label>
                 <input formControlName="message" type="text" id="postBody"/>
             </div>
             <div class="form-object">
@@ -30,6 +30,7 @@
                     <div class="selected-container">
                         <h3 class="selected-emoji">{{selectedEmoji}}</h3>
                     </div>
+                    <p style="color: red">{{error}}</p>
                 </div>
             </div>
             <button (click)="onSubmit()" id="post" type="button">Post</button>

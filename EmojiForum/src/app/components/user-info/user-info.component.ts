@@ -16,6 +16,7 @@ export class UserInfoComponent implements OnInit {
   emojis: any[] = [];
   selectedEmoji: String = '😀'
   image: any;
+  error: String = '';
   @Input() username: String = '';
   @Input() profilePic: String = '';
   @Input() id: Number = 0;
@@ -30,10 +31,9 @@ export class UserInfoComponent implements OnInit {
   });
 
   getEmojis() {
-    return this.http.get<any>('https://emoji-api.com/emojis?access_key=f9927797e5e6b0409671aac9dff56ecfbf247708')
+    return this.http.get<any>('https://emoji-api.com/emojis?access_key=378b4fc7fc2e286bf4fc0ce260f91c09ba088911')
       .subscribe(data => {
         this.emojis = data;
-
       });
   };
 
@@ -45,7 +45,6 @@ export class UserInfoComponent implements OnInit {
     if (event.target.files.length > 0){
       const file = event.target.files[0];
       this.image = file;
-
     }
   }
 
@@ -60,6 +59,7 @@ export class UserInfoComponent implements OnInit {
         this.postCreated.emit(res);
       },
       error: err => {
+        this.error = err;
         console.error('There was an error!', err);
       }
     })
@@ -73,6 +73,7 @@ export class UserInfoComponent implements OnInit {
         location.reload();
       },
       error: err => {
+        this.error = err;
         console.log(err);
       }
     });
@@ -92,6 +93,7 @@ export class UserInfoComponent implements OnInit {
         location.reload();
       },
       error: err => {
+        this.error = err;
         console.log(err);
       }
     });

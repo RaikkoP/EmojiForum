@@ -54,11 +54,6 @@
     margin-top: 20px;
 }
 
-.info-image:hover {
-    filter: brightness(50%);
-    cursor: pointer;
-}
-
 .info-data {
     width: 80%;
 }
@@ -168,4 +163,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media (max-width: 500px) {
+    .profile {
+        padding: 20px;
+        width: 100vw;
+        height: 100%;
+        background-color: #161623;
+    }
+}
+@media (max-width: 810px) {
+    .profile {
+        padding: 20px;
+        width: 400px;
+        height: 100%;
+        background-color: #161623;
+    }
 }
