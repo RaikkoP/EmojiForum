@@ -15,6 +15,10 @@ export class AllPostsComponent {
   constructor(
   ) { };
 
+  ngOnChanges() {
+    console.log(this.posts);
+  }
+
   trackByIndex(index: number, post: any): any {
     return index;
   }

@@ -1,9 +1,16 @@
 <div class="profile">
     <div class="info">
         <div class="info-image-container">
-            <img class="info-image" src="../../assets/{{profilePic}}" />
+            <img class="info-image" src="http://localhost:3000/images/{{profilePic}}" />
             <h2 style="color: white; text-align: center;">{{username}}</h2>
-            <button (click)="logout()">Log-out</button>
+        </div>
+        <div class="profile-settings">
+            <form class="settings" enctype="multipart/form-data">
+                <label>Change Profile Picture</label>
+                <input (change)="selectImage($event)" type="file" name="image"/>
+                <button (click)="$event.preventDefault(); onFileUpload()" type="submit">Change Image</button>
+            </form>
+            <button id="logout" (click)="logout()">Log-out</button>
         </div>
     </div>
     <div class="form-container">

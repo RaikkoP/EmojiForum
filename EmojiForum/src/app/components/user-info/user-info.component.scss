@@ -1,48 +1,89 @@
 @import '@ctrl/ngx-emoji-mart/picker';
+
 #emoji-button {
     background-color: #373658;
     border: none;
     font-size: 45px;
     margin: 2px;
 }
+
 #emoji-button:hover {
     cursor: pointer;
 }
+
 #post {
     padding: 20px;
     font-size: 20px;
     border-radius: 20px;
     margin-top: 20px;
 }
+
+#logout {
+    padding: 20px;
+    margin-top: 20px;
+}
+
 .emoji-button option {
     text-align: center;
 }
+
 .profile {
     padding: 20px;
     width: 600px;
     height: 100%;
     background-color: #161623;
 }
+
 .info {
     display: flex;
     padding: 20px;
     border-radius: 20px;
     background-color: #292841;
     box-shadow: 10px 5px 5px #161624;
-}   
+}
+
 .info-image-container {
     width: 20%;
     margin-left: auto;
     margin-right: auto;
 }
+
 .info-image {
     width: 100%;
     border-radius: 20px;
     margin-top: 20px;
 }
+
+.info-image:hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}
+
 .info-data {
     width: 80%;
 }
+
+.profile-settings {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings label {
+    color: white;
+    font-size: 20px;
+}
+
+.settings input {
+    color: white;
+    font-size: 16px;
+}
+
+
 .data-container {
     font-size: 20px;
     padding: 5px;
@@ -52,12 +93,14 @@
     color: white;
     background-color: #333251;
 }
+
 .form-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
 }
+
 .form {
     background-color: #292841;
     padding: 20px;
@@ -68,6 +111,7 @@
     flex-direction: column;
     align-items: center;
 }
+
 .form-object {
     display: flex;
     align-items: center;
@@ -75,9 +119,11 @@
     width: 100%;
     height: 100%;
 }
+
 .form-object label {
     font-size: 38px;
 }
+
 .form-container input {
     border: none;
     border-bottom: 1px solid white;
@@ -90,6 +136,7 @@
     margin: 20px;
     text-align: center;
 }
+
 .emoji-container {
     display: flex;
     flex-wrap: wrap;
@@ -101,9 +148,11 @@
     height: 200px;
     width: 400px;
 }
+
 .emoji-container h3 {
     padding: 20px;
 }
+
 .selected-emoji {
     text-align: center;
     background-color: #373658;
@@ -114,6 +163,7 @@
     padding: 20px;
     font-size: 60px;
 }
+
 .selected-container {
     display: flex;
     align-items: center;

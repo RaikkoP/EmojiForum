@@ -1,7 +1,7 @@
 <div class="posts">
     <div *ngFor="let data of posts; trackBy: trackByIndex" class="post-container">
         <div class="image-container">
-            <img class="demo-image" [src]="'../../assets/' + data.user.profilePic" height="120" width="120"/>
+            <img class="demo-image" [src]="'http://localhost:3000/images/' + data.user.profilePic" height="120" width="120"/>
             <h4 class="username">{{data.username}}</h4>
         </div>
         <div class="post-info">

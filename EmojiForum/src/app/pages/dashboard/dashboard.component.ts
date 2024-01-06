@@ -6,7 +6,6 @@ import { AllPostsComponent } from '../../components/all-posts/all-posts.componen
 import UserResponse from '../../../model/user';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -48,6 +47,7 @@ export class DashboardComponent implements OnInit {
         this.username = res.username;
         this.profilePic = res.profilePic;
         this.id = res.id;
+        console.log(this.profilePic);
       },
       error: err => {
         this.router.navigate(['/login']);
